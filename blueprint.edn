@@ -1,0 +1,10 @@
+{:itonami.blueprint/id "cloud-itonami-cofog-06.3"
+ :itonami.blueprint/name "Independent Water Infrastructure Leak-Detection Robotics"
+ :itonami.blueprint/cofog "06.3"
+ :itonami.blueprint/domain :housing-community/water-supply
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:water-conservation :infrastructure-resilience :public-health]
+ :itonami.blueprint/governor :water-infrastructure-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :telemetry :dmn :bpmn :audit-ledger]
+ :itonami.blueprint/status :public-oss}
