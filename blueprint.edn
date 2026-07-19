@@ -7,4 +7,27 @@
  :itonami.blueprint/governor :water-infrastructure-governor
  :itonami.blueprint/robotics true
  :itonami.blueprint/required-technologies [:robotics :telemetry :dmn :bpmn :audit-ledger]
- :itonami.blueprint/status :public-oss}
+ :itonami.blueprint/status :public-oss
+ :itonami.blueprint/maturity :implemented
+ :itonami.blueprint/implemented-slice
+ "Survey Advisor ⊣ Water Infrastructure Governor, langgraph-clj
+ StateGraph, append-only audit ledger. A water-infrastructure
+ leak-detection SURVEY COORDINATION actor -- not direct valve/main
+ control authority and not a water-utility regulatory compliance
+ authority. Four ops (`:log-pipe-condition` / `:leak-survey` /
+ `:schedule-repair-recommendation` / `:escalate-critical-leak`), all
+ `:effect :propose` only. Ten concrete governor checks elaborate this
+ blueprint's HARD invariants: propose-only effect, closed op
+ allowlist, closed proposal-effect allowlist (no direct valve/main
+ control), permanent valve-actuate block, sensor-grounded
+ CONFIRMED/NO-LEAK verdicts (leaksurvey.telemetry/grounds-verdict?,
+ requiring cited readings to cover both acoustic-signature and
+ pressure-differential metrics -- never advisor self-attestation),
+ independent segment verification/registration before repair
+ recommendation, independent on-file confirmed-leak verification
+ before repair recommendation, double-recommendation guard, pipe-
+ material validation, and flow-loss plausibility validation.
+ Critical-leak escalation ALWAYS escalates to a human survey
+ coordinator; `:log-pipe-condition` is the only op eligible to
+ auto-commit, and only at phase 3 when governor-clean. 74 tests / 202
+ assertions green, clj-kondo 0 errors."}
