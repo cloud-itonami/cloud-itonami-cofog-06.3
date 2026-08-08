@@ -232,6 +232,16 @@
   (with-readings s (sample-readings))
   s)
 
+(defn seed-db
+  "A MemStore seeded with the demo data set. The deterministic default.
+
+  Same two steps `mem-store` + `sample-data!` already did, under the
+  one name every sibling actor exposes -- so a consumer that binds
+  this actor into a larger surface does not have to know that this
+  domain happens to seed in two calls instead of one."
+  []
+  (-> (mem-store) (sample-data!)))
+
 ;; ----------------------------- back-compat aliases -----------------------------
 ;; `get-ledger` mirrors `ledger` under the name several sibling actors'
 ;; own demo/test harnesses already call.
