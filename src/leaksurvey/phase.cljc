@@ -30,6 +30,22 @@
   (`:log-pipe-condition`) -- no separate no-risk lifecycle distinct
   from ordinary record logging.")
 
+(def read-ops
+  "Ops that only read. **Empty in this domain** -- every op this actor
+  coordinates produces a record, a finding, an escalation or a
+  schedule, so none of them is read-only.
+
+  It is defined anyway because a consumer composing this actor's op
+  set does `(into read-ops write-ops)` -- the shape every sibling
+  exposes. Leaving it out makes this actor look different from its
+  siblings for no reason other than that today the set is empty.
+
+  If a read op is ever added here, `gate` below must be updated at the
+  same time: it has no read-op branch (there is nothing to branch on),
+  so a read op that is not also in `write-ops` would be HELD as
+  `:phase-disabled`."
+  #{})
+
 (def write-ops
   #{:log-pipe-condition :leak-survey
     :schedule-repair-recommendation :escalate-critical-leak})
