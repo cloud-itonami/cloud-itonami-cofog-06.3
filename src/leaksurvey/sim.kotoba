@@ -1,5 +1,5 @@
 (ns leaksurvey.sim
-  "Demo driver -- `clojure -M:dev:run`. Walks a clean inspector through
+  "Demo driver -- `kbb -M:dev:run`. Walks a clean inspector through
   intake -> a GROUNDED leak-survey confirming a leak (escalate/approve)
   -> repair-recommendation scheduling against the confirmed leak
   (escalate/approve) -> critical-leak escalation (escalate/approve),
