@@ -1,0 +1,31 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README "Robotics premise": an acoustic/pressure leak-sensing robot performs
+;; the distribution-network survey (COFOG 06.3 water supply). The physics it
+;; has to reason about is the network's own hydraulics: how much head a main
+;; loses at a given flow (so a pressure reading can be read as leak or as
+;; friction), and how fast a leak drains a service reservoir.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-cofog-06.3"
+ :cases
+ [{:id :main-headloss-at-survey-flow
+   :kind :pipe-flow
+   :procedure "robot logs pressure at both ends of a 1 km DN150 cement-lined ductile-iron distribution main; friction head loss at the survey flow is what a leak signal must stand out from"
+   :params {:diameter-m 0.15 :length-m 1000.0 :roughness-m 1.0e-4
+            :density-kg-m3 998.0 :viscosity-pa-s 1.0e-3 :pump-efficiency 0.70}
+   :sweep {:param :q-m3s :values [0.005 0.010 0.020 0.030 0.040]}
+   :quantity :head-m
+   :limit {:max 10.0 :basis "estimate: at most 10 m head loss per km of distribution main so customers keep service pressure at peak demand"}
+   :boundary {:lo 0.002 :hi 0.06}}
+  {:id :reservoir-leak-drawdown
+   :kind :tank-drain
+   :procedure "an undetected leak drains a 300 m2 service reservoir; time for the level to fall 0.5 m before the level alarm, leak size swept"
+   :params {:tank-area-m2 300.0 :h0-m 5.0 :h-target-m 4.5 :cd 0.62 :q-in-m3s 0.0 :dt-s 5.0 :max-time-s 1209600.0}
+   :sweep {:param :orifice-area-m2 :values [1.0e-4 3.0e-4 1.0e-3 3.0e-3 1.0e-2]}
+   :quantity :time-to-target-s
+   :limit {:min 28800.0 :basis "estimate: a leak that drops the level 0.5 m within one 8-hour night-flow window must already have been caught by the survey"}
+   :boundary {:lo 5.0e-5 :hi 2.0e-2}}]}
